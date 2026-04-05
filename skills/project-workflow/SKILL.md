@@ -6,17 +6,56 @@ user-invocable: true
 
 # Project Workflow — Universal 5-Phase Development Process
 
-<HARD-GATE>
-You MUST complete each phase in order. You MUST output the TRIAGE assessment BEFORE doing anything else. You MUST NOT skip to implementation without completing DISCOVER and PLAN phases (unless Path S). You MUST NOT write any code until Phase 2. Violation of phase ordering is a CRITICAL error.
-</HARD-GATE>
+## Overview
 
-<HARD-GATE>
-REFLECTION QUALITY RULE: Every reflection box (深度思考并优化 / 思考并优化) is NOT a template to fill in mechanically. Before outputting each reflection box, you MUST pause and genuinely think: challenge your own assumptions, look for flaws in what you just produced, consider alternatives you dismissed too quickly. If your reflection just restates what you already said in different words, you are doing it wrong. A good reflection CHANGES something — it catches a mistake, surfaces a risk you missed, or identifies a simpler approach. If your reflection changes nothing, think harder.
-</HARD-GATE>
+Skipping phases produces work your user cannot trust. Skipping reflection produces designs nobody challenged.
 
-<HARD-GATE>
-DO NOT invoke `superpowers:brainstorming` or `superpowers:writing-plans` as separate skills. They have their own competing workflows that will override this one. Instead, follow the inline instructions in each phase below. You ARE the workflow controller — never hand off control to another process-level skill.
-</HARD-GATE>
+**Core principle:** Every phase exists because skipping it has caused real failures. Violating the letter of this workflow is violating the spirit.
+
+**Violating the letter of these rules is violating the spirit of these rules.**
+
+## The Iron Laws
+
+```
+NO CODE WITHOUT TRIAGE FIRST
+NO IMPLEMENTATION WITHOUT DESIGN APPROVAL
+NO "DONE" WITHOUT VERIFY + SHIP
+NO REFLECTION WITHOUT A CHANGE — if your reflection changes nothing, you didn't reflect
+```
+
+Skip any law = start over from the violated phase.
+
+## Red Flags — STOP
+
+These thoughts mean you are about to violate the workflow:
+
+| You are thinking | Reality |
+|-----------------|---------|
+| "Let me just start coding, I understand enough" | TRIAGE + DISCOVER exist for a reason. Do them. |
+| "This task is simple, skip DISCOVER/PLAN" | Simple tasks are where unexamined assumptions waste the most time. |
+| "I'll do Phase 3/4 later" | Later means never. You will forget. Do it now. |
+| "All tests pass so I'm done" | Tests passing = Phase 2 done. VERIFY and SHIP are separate phases. |
+| "I can merge these 5 tasks into one" | Max 2. Each group needs its own TDD + reflection + checkpoint. |
+| "Reflection: everything looks good ✓" | That's not reflection. That's a rubber stamp. Find something to challenge. |
+| "I'll skip the review agent, code looks fine" | Your own code always looks fine to you. Dispatch the reviewer. |
+| "Phase 0 questions are unnecessary, user was clear" | You think you understand. Ask anyway. Users omit constraints they assume you know. |
+| "Let me write code then add tests" | TDD means test FIRST. If you wrote code first, delete it. |
+| "progress.md update is busywork" | Your user needs to resume next session. Update it. |
+
+**ALL of these mean: STOP. You are rationalizing. Follow the workflow.**
+
+## Rationalization Prevention
+
+| Excuse | Reality |
+|--------|---------|
+| "Task too simple for full workflow" | TRIAGE handles this — it routes to Path S. Trust the triage, don't skip it. |
+| "User said 继续, so skip questions" | 继续 means proceed with defaults, NOT skip phases. |
+| "Research already done in my training data" | Training data is stale. Search first. |
+| "No time for Phase 3, tests already passed in BUILD" | Phase 3 catches what Phase 2 missed. That's the point. |
+| "Reflection is the same as what I just said" | Then you didn't reflect. Challenge your own work. Find a flaw. |
+| "Code review is redundant, I already checked" | You wrote it. You can't review your own work objectively. Dispatch an agent. |
+| "Merging all remaining tasks saves time" | It destroys TDD discipline and produces unreviewable giant commits. Max 2 tasks. |
+| "Phase 4 learn-eval is optional" | It's mandatory for Path L. The patterns you extract help future sessions. |
 
 ## How to Use
 
@@ -28,11 +67,11 @@ If no arguments provided, ask the user: "What are we building or fixing?"
 
 ## Phase -1: TRIAGE
 
-<HARD-GATE>
-This phase is MANDATORY. You MUST output the triage box below BEFORE any other action. No exploring files, no asking questions, no brainstorming. TRIAGE FIRST.
-</HARD-GATE>
+```
+NO ACTION BEFORE TRIAGE OUTPUT
+```
 
-Evaluate the task on 3 dimensions and output:
+Output the triage box BEFORE any other action — no file reading, no questions, no exploration:
 
 ```
 ╔══════════════════════════════════════════════════╗
@@ -56,290 +95,210 @@ After outputting TRIAGE, say: "Triage complete. Proceeding to Phase [0/2] (Path 
 
 ## Phase 0: DISCOVER
 
-> **Skip if Path S.** Go directly to Phase 2.
+> Skip if Path S → go directly to Phase 2.
 
-<HARD-GATE>
-DO NOT invoke superpowers:brainstorming. Follow the steps below directly.
-</HARD-GATE>
+DO NOT invoke `superpowers:brainstorming`. Follow the steps below directly.
 
-### Step 0.1: Context (do silently)
-Read relevant files, docs, recent commits to understand the current state. Do NOT output a long summary — just absorb context.
+### Step 0.1: Context (silent)
+Read files, docs, commits. No long summary — absorb and move on.
 
 ### Step 0.2: Clarifying Questions
-Ask the user **one question at a time**. Prefer multiple choice. Focus on:
-- Purpose: What problem does this solve?
-- Constraints: Platform, performance, dependencies?
-- Success criteria: How do we know it's done?
+One question at a time. Multiple choice preferred. 2-4 questions max.
+If user says "继续": proceed with reasonable defaults (do NOT skip the phase).
 
-Keep to 2-4 questions max. If the user says "继续" or similar, move forward with reasonable defaults.
-
-### Step 0.3: Approaches (Path M: 2 options, Path L: 3 options)
-Present approaches with trade-offs. Lead with your recommendation.
+### Step 0.3: Approaches
+Path M: 2 options. Path L: 3 options. Lead with your recommendation.
 
 ### Step 0.4: Design
-Present the design in sections:
-- Architecture overview
-- Key components and their responsibilities
-- Data flow
-- Tech stack choices
+Present: architecture, components, data flow, tech stack.
 
-After presenting, you MUST output this box:
+After presenting, REFLECT (see Reflection Rules below):
 
 ```
 ┌─ 深度思考并优化 ─────────────────────────┐
 │ 1. 需求理解对不对？遗漏了什么？           │
-│    [你的分析]                             │
+│    [your analysis — must be specific]     │
 │                                           │
 │ 2. 有没有更优解？                         │
-│    [你的分析]                             │
+│    [your analysis — name the alternative] │
 │                                           │
 │ 3. 这个方案是最简的吗？                   │
-│    [你的分析]                             │
+│    [your analysis — what can be removed?] │
 └───────────────────────────────────────────┘
 ```
 
-Ask: "Design 可以吗？还是要调整？"
+Ask: "Design 可以吗？还是要调整？" — Wait for user.
 
 ### Step 0.5: Research (Path L only)
-If Path L, launch research agents in parallel:
-- Use `Agent` tool with `mcp__exa__web_search_exa` for web research
-- Use `mcp__context7__query-docs` for library documentation
-- Synthesize findings into the design
-
-After research, you MUST output:
+Launch research agents in parallel. Synthesize into design.
 
 ```
 ┌─ 思考并优化 ─────────────────────────────┐
 │ research 结果够全面吗？                   │
 │ 有没有遗漏的关键来源？                    │
-│ [你的分析]                                │
+│ [your analysis]                           │
 └───────────────────────────────────────────┘
 ```
 
 ### Step 0.6: Write Spec
-Save design to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit.
-
+Save to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit.
 → Get user approval before proceeding.
 
 ---
 
 ## Phase 1: PLAN
 
-> **Skip if Path S.** Go directly to Phase 2.
+> Skip if Path S → go directly to Phase 2.
 
-<HARD-GATE>
-DO NOT invoke superpowers:writing-plans. Follow the steps below directly.
-Every reflection box in this phase is MANDATORY. You MUST output each box. Skipping any reflection is a CRITICAL violation.
-</HARD-GATE>
+DO NOT invoke `superpowers:writing-plans`. Follow the steps below directly.
 
 ### Step 1.1: First Principles Decomposition
 
-Think deeply about the problem from scratch. Do NOT copy patterns from Phase 0 or regurgitate common knowledge. Analyze THIS specific project's unique constraints. You MUST output this box with YOUR OWN analysis:
+Think from scratch. Do NOT regurgitate Phase 0. Analyze THIS project's unique constraints:
 
 ```
 ┌─ 第一性原则分解 ─────────────────────────┐
 │ 1. 本质约束:                              │
-│    [你的分析 — 这个项目特有的物理/技术     │
-│     /资源约束是什么？]                     │
-│                                           │
+│    [your analysis — project-specific]     │
 │ 2. 不可绕过的限制:                        │
-│    [你的分析 — 哪些限制无论怎么设计       │
-│     都绕不过去？]                          │
-│                                           │
+│    [your analysis — absolute constraints] │
 │ 3. 零基础最优解:                          │
-│    [你的分析 — 忘掉所有现有方案，         │
-│     从第一性原则出发的最优设计是什么？]     │
-│                                           │
+│    [your analysis — if starting from zero]│
 │ 4. 现有代码评估:                          │
-│    [你的分析 — 哪些接近最优可复用，       │
-│     哪些需要重写？]                        │
+│    [your analysis — reuse vs rewrite]     │
 └───────────────────────────────────────────┘
 ```
 
-Then IMMEDIATELY output this reflection:
+Immediately reflect:
 
 ```
 ┌─ 思考并优化 ─────────────────────────────┐
-│ 上面的分解是否触及了真正的约束？          │
-│ 还是在重复表面假设？                      │
-│ [你的自我审视]                            │
+│ 触及了真正的约束，还是在重复表面假设？    │
+│ [your self-challenge]                     │
 └───────────────────────────────────────────┘
 ```
 
 ### Step 1.2: Search Existing Solutions
-Invoke the Skill tool with skill name `search-first` to check if existing libraries/tools already solve part of the problem. If the skill is unavailable, use the Agent tool (subagent_type: "general-purpose") to search for existing solutions instead.
+Invoke the Skill tool with `search-first`. If unavailable, use Agent (general-purpose) to search.
 
 ### Step 1.3: Write Implementation Plan
-
-Create a plan with **bite-sized tasks** (each 2-5 minutes):
-- Exact file paths for every change
-- Code snippets for each step
-- Test commands with expected output
-- TDD order: write test → verify fail → implement → verify pass → commit
-
-For Path L: Also create `task_plan.md` / `findings.md` / `progress.md` for tracking.
-
-Save plan to `docs/superpowers/plans/YYYY-MM-DD-<feature>.md`
-
-After writing the plan, you MUST output:
+Bite-sized tasks (2-5 min each). Exact file paths. Code snippets. TDD order.
+Path L: also create `task_plan.md` / `findings.md` / `progress.md`.
+Save to `docs/superpowers/plans/YYYY-MM-DD-<feature>.md`.
 
 ```
 ┌─ 深度思考并优化 ─────────────────────────┐
-│ 1. 这个方案是从第一性原则推导的，         │
-│    还是在抄现有方案？                     │
-│    [你的判断]                             │
-│                                           │
-│ 2. 步骤分解合理吗？依赖关系对吗？         │
-│    [你的分析]                             │
-│                                           │
-│ 3. 有没有过度设计或遗漏？                 │
-│    [你的发现]                             │
+│ 1. 第一性原则推导 vs 抄现有方案？         │
+│    [your judgment]                        │
+│ 2. 步骤/依赖合理？                        │
+│    [your analysis]                        │
+│ 3. 过度设计或遗漏？                       │
+│    [your findings]                        │
 └───────────────────────────────────────────┘
 ```
 
 ### Step 1.4: Feasibility Validation
 
-You MUST output this box:
-
 ```
 ┌─ 可行性验证 ─────────────────────────────┐
-│ 1. 技术可行性:                            │
-│    [能实现吗？API/硬件约束？]             │
-│                                           │
-│ 2. 隐含依赖:                              │
-│    [有没有没列出来的依赖？]               │
-│                                           │
-│ 3. 最大风险点:                            │
-│    [哪里最可能失败？怎么回退？]           │
-│                                           │
-│ 4. 惯性检查:                              │
-│    [有没有因为习惯多加了不必要的步骤？]   │
+│ 1. 技术可行？ [your analysis]             │
+│ 2. 隐含依赖？ [your analysis]             │
+│ 3. 最大风险 + 回退？ [your analysis]      │
+│ 4. 惯性检查？ [your analysis]             │
 └───────────────────────────────────────────┘
 ```
-
-Then IMMEDIATELY output:
 
 ```
 ┌─ 深度思考并优化 ─────────────────────────┐
-│ 这个计划真的可行吗？                      │
-│ 哪一步最可能出问题？                      │
-│ [你的判断]                                │
+│ 真的可行吗？哪步最危险？                  │
+│ [your judgment]                           │
 └───────────────────────────────────────────┘
 ```
 
-Ask: "Plan 可以吗？开始写代码？"
-
-→ Get user approval before proceeding.
+Ask: "Plan 可以吗？开始写代码？" — Wait for user.
 
 ---
 
 ## Phase 2: BUILD
 
-<HARD-GATE>
-For EVERY task (not just scaffold), you MUST follow the 5-step cycle below IN ORDER. You MUST output the reflection checkpoint box after each task. Skipping TDD or skipping reflections is a CRITICAL violation. No exceptions.
-</HARD-GATE>
+```
+NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
+```
 
-### The BUILD Cycle (repeat for each task):
+### The BUILD Cycle (per task, max 2 tasks merged):
 
-**Step 2.1: Write tests FIRST (TDD)**
-- Write a failing test that defines the expected behavior
-- Run the test to confirm it FAILS
-- If the task is pure scaffold (no logic), write a smoke test instead (e.g., "module imports without error", "config file is valid")
-
-**Step 2.2: Implement — make the test pass**
-- Write MINIMAL code to pass the test
-- Run the test to confirm it PASSES
-
-**Step 2.3: Reflect and optimize**
-
-You MUST output this box after implementation:
+**2.1 Write test FIRST** → run → confirm FAIL
+**2.2 Implement** → run → confirm PASS
+**2.3 Reflect** (see Reflection Rules):
 
 ```
 ┌─ 思考并优化 ─────────────────────────────┐
-│ 测试: [覆盖够吗？边界情况？]              │
-│ 实现: [有更简洁的写法吗？]                │
-│ 质量: [命名清晰吗？职责单一吗？]          │
+│ 测试: [coverage gaps? edge cases?]        │
+│ 实现: [simpler approach exists?]          │
+│ 质量: [naming? responsibility?]           │
 └───────────────────────────────────────────┘
 ```
 
-If any answer reveals an issue → fix it NOW before proceeding.
-
-**Step 2.4: Review**
-- Dispatch code review agent (python-review / typescript-reviewer depending on language)
-- If security-required: also dispatch security-review agent
-- Fix all issues found before proceeding
-
-**Step 2.5: Test gate + checkpoint**
-
-Run full test suite. Then output this checkpoint:
+**2.4 Review** — dispatch code review agent (per-language reviewer). Fix all issues.
+**2.5 Checkpoint:**
 
 ```
 ╔══ Task Checkpoint ═══════════════════════╗
-║ Task:    [task name]                      ║
+║ Task:    [name]                           ║
 ║ Tests:   [X passed / Y total]             ║
 ║ Status:  [PASS / FAIL]                    ║
 ╚══════════════════════════════════════════╝
 ```
 
-PASS → proceed to next task
-FAIL → fix and re-run until PASS
-
-### For tasks with deep implications (architecture, data model, core systems):
-
-After the checkpoint, ALSO output:
+For architecture/core tasks, add:
 
 ```
 ┌─ 深度思考并优化 ─────────────────────────┐
-│ 这个实现会限制后续扩展吗？                │
-│ 有没有做了不该做的假设？                  │
-│ 如果要改，现在改成本最低                  │
+│ 限制后续扩展？错误假设？现在改最便宜？    │
+│ [your analysis]                           │
 └───────────────────────────────────────────┘
 ```
 
-### Parallel execution (Path L only):
-If plan has independent tasks, dispatch parallel worktree agents via `Agent` tool with `isolation: "worktree"`. Each agent MUST follow the same 5-step cycle.
+### BUILD Discipline
+
+| Rule | Enforcement |
+|------|-------------|
+| Max 2 tasks merged | Each group needs own TDD + reflection + checkpoint |
+| Code review | At least 1 per Layer. Dispatch `typescript-reviewer` or `python-reviewer` |
+| TDD order | Test FIRST. Wrote code first? Delete it. Start with test. |
+| Parallel (Path L) | Independent tasks in worktrees. Each follows same 5-step cycle. |
 
 ---
 
 ## Phase 3: VERIFY
 
-<HARD-GATE>
-Phase 3 is MANDATORY for Path M and L. You MUST NOT skip it. You MUST NOT claim "Layer X complete" or "done" without running Phase 3. Completing all BUILD tasks does NOT mean the work is done — VERIFY must happen.
-</HARD-GATE>
+```
+NO "DONE" CLAIMS WITHOUT VERIFY
+```
 
-Run in parallel:
-1. Full test suite (e.g., `npx vitest run` or `python -m pytest tests/ -v`)
-2. Dispatch code review agent (`superpowers:code-reviewer` or language-specific reviewer like `typescript-reviewer`) — review ALL code written in Phase 2 against the plan
-3. Dispatch `everything-claude-code:security-scan` agent (if security-required)
+Completing BUILD does NOT mean done. VERIFY is a separate phase. Run in parallel:
 
-After all results return, you MUST output:
+1. Full test suite
+2. Code review agent — review ALL Phase 2 code against plan
+3. Security scan (if security-required)
 
 ```
 ┌─ 思考并优化 ─────────────────────────────┐
-│ review 发现了什么问题？都修完了吗？       │
-│ [你的分析]                                │
-│                                           │
-│ 测试覆盖有盲区吗？                        │
-│ [你的分析]                                │
+│ review 问题修完了？测试盲区？             │
+│ [your analysis]                           │
 └───────────────────────────────────────────┘
 ```
 
-Fix ALL issues found. Then run tests again to confirm. Then output:
+Fix issues. Re-run tests. Then:
 
 ```
 ┌─ 深度思考并优化 ─────────────────────────┐
-│ 整体一致性如何？模块间接口对得上吗？      │
-│ [你的分析]                                │
-│                                           │
-│ 有没有遗留问题或技术债？                  │
-│ [你的分析]                                │
-│                                           │
-│ 改动的副作用想清楚了吗？                  │
-│ [你的分析]                                │
+│ 整体一致性？遗留技术债？副作用？          │
+│ [your analysis]                           │
 └───────────────────────────────────────────┘
 ```
 
-Show actual command output as evidence. NO claiming "done" without proof.
+Show actual command output as evidence:
 
 ```
 ╔══ VERIFY Checkpoint ════════════════════╗
@@ -354,65 +313,100 @@ Show actual command output as evidence. NO claiming "done" without proof.
 
 ## Phase 4: SHIP
 
-<HARD-GATE>
-Phase 4 is MANDATORY. You MUST update progress.md. For Path L you MUST run learn-eval reflection. Do NOT end the session without completing Phase 4.
-</HARD-GATE>
+```
+NO SESSION END WITHOUT PHASE 4
+```
 
-**Step 4.1: Commit** (DO NOT auto-push)
+**4.1 Commit** (DO NOT auto-push)
 
 ```
 ┌─ 思考并优化 ─────────────────────────────┐
-│ commit message 准确反映了改动吗？         │
-│ [你的判断]                                │
+│ commit message 准确？[your judgment]      │
 └───────────────────────────────────────────┘
 ```
 
-**Step 4.2: Update progress.md**
-Mark completed tasks, update "Next" section. This is NOT optional.
+**4.2 Update progress.md** — mark completed, update "Next". NOT optional.
 
-**Step 4.3: Learn (Path L only)**
+**4.3 Learn (Path L)**
 
 ```
 ┌─ 深度思考并优化 ─────────────────────────┐
-│ 这次有什么可复用的模式？                  │
-│ [你的发现]                                │
-│                                           │
-│ 哪里花的时间比预期多？为什么？            │
-│ [你的分析]                                │
-│                                           │
-│ 下次做类似项目，怎么更快？                │
-│ [你的建议]                                │
+│ 可复用模式？[your findings]               │
+│ 哪里超时？为什么？[your analysis]         │
+│ 下次怎么更快？[your suggestions]          │
 └───────────────────────────────────────────┘
 ```
 
+If session must end before Phase 4: tell user "Phase 3/4 pending. Run `/project-workflow continue` next session."
+
 ---
 
-## BUILD Discipline Rules
+## Reflection Rules
 
-<HARD-GATE>
-TASK MERGING LIMIT: You may merge at most 2 closely-related tasks (e.g., BILD parser + ANIM parser). You MUST NOT merge 3+ tasks into one giant implementation. Each merged group MUST still have its own TDD cycle + reflection box + checkpoint. Merging 6 tasks (like L0-5 through L0-10) into one is a CRITICAL violation.
-</HARD-GATE>
+**A reflection that changes nothing is not a reflection.**
 
-<HARD-GATE>
-CODE REVIEW REQUIREMENT: You MUST dispatch a code review agent at least once per Layer/Phase of BUILD. For TypeScript projects use `typescript-reviewer`, for Python use `python-reviewer`. Skipping code review for an entire Layer is a CRITICAL violation.
-</HARD-GATE>
+Every reflection box must produce at least ONE of:
+- A mistake caught
+- A risk surfaced
+- A simpler approach identified
+- An assumption challenged
+- A dependency discovered
+- A step removed or reordered
 
-## Always-On (all paths, all phases)
+### Good vs Bad Reflection
 
-- Format hook (PostToolUse auto-format) — automatic
-- Language-appropriate review agent — any code change
-- verification-before-completion — any task completion
-- security-review — when security-required
-- docs / Context7 — when external library involved
+<Good>
+```
+┌─ 深度思考并优化 ─────────────────────────┐
+│ 发现一个问题：BILD/ANIM 不是简单的        │
+│ spritesheet — 是骨骼动画。需要运行时      │
+│ 播放器，不能预渲染。这是最高风险项。      │
+│ → 调整：Layer 0 先验证动画播放器可行性。  │
+└───────────────────────────────────────────┘
+```
+Found a real risk, changed the plan.
+</Good>
+
+<Bad>
+```
+┌─ 思考并优化 ─────────────────────────────┐
+│ 测试: 覆盖够 ✓                           │
+│ 实现: 没有更简洁的写法 ✓                  │
+│ 质量: 命名清晰 ✓                         │
+└───────────────────────────────────────────┘
+```
+Rubber stamp. Changes nothing. Found nothing. This is NOT reflection.
+</Bad>
+
+### Reflection Red Flags
+
+| You are outputting | Reality |
+|-------------------|---------|
+| "✓" for every item | You're rubber-stamping, not reflecting |
+| Same words as the content you're reflecting on | You're restating, not challenging |
+| "No issues found" | Look harder. There are ALWAYS trade-offs to surface. |
+| Generic praise ("clean code", "good structure") | Be specific or don't say it |
+
+---
 
 ## Phase Transition Rules
 
 ```
-TRIAGE ──→ Path S? ──→ Phase 2 (BUILD) → Phase 3 (VERIFY) → Phase 4 (SHIP)
+TRIAGE ──→ Path S? ──→ Phase 2 → Phase 3 → Phase 4
            Path M? ──→ Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4
-           Path L? ──→ Phase 0 (with research) → Phase 1 → Phase 2 → Phase 3 → Phase 4
+           Path L? ──→ Phase 0 (research) → Phase 1 → Phase 2 → Phase 3 → Phase 4
 ```
 
-<HARD-GATE>
-PHASE COMPLETION: Each phase MUST complete before the next starts. Phase 3 (VERIFY) and Phase 4 (SHIP) are NOT optional — even if all tests pass in BUILD, you still run VERIFY and SHIP. The session MUST NOT end mid-workflow without at least reaching Phase 4 or explicitly telling the user "Phase 3/4 still pending, run /project-workflow continue next session."
-</HARD-GATE>
+Each phase completes before the next starts. Phase 3 and 4 are NOT optional.
+
+## Always-On
+
+- Format hook (PostToolUse auto-format) — automatic
+- Language-appropriate review agent — dispatch for code changes
+- verification-before-completion — evidence before claims
+- security-review — when security-required
+- docs / Context7 — when external library involved
+
+## Skill Delegation
+
+DO NOT invoke `superpowers:brainstorming` or `superpowers:writing-plans` — they have competing workflows. You ARE the controller. Use ECC tools (reviewers, search-first, docs) and MCP tools directly.
