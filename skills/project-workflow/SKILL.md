@@ -167,7 +167,7 @@ Then IMMEDIATELY output this reflection:
 ```
 
 ### Step 1.2: Search Existing Solutions
-Use `everything-claude-code:search-first` — check if existing libraries/tools already solve part of the problem.
+Invoke the Skill tool with skill name `search-first` to check if existing libraries/tools already solve part of the problem. If the skill is unavailable, use the Agent tool (subagent_type: "general-purpose") to search for existing solutions instead.
 
 ### Step 1.3: Write Implementation Plan
 
