@@ -79,12 +79,20 @@ Present the design in sections:
 - Data flow
 - Tech stack choices
 
-After presenting:
+After presenting, you MUST output this box:
 
-> **深度思考并优化：**
-> - 需求理解对不对？遗漏了什么？
-> - 有没有更优解？
-> - 这个方案是最简的吗？
+```
+┌─ 深度思考并优化 ─────────────────────────┐
+│ 1. 需求理解对不对？遗漏了什么？           │
+│    [你的分析]                             │
+│                                           │
+│ 2. 有没有更优解？                         │
+│    [你的分析]                             │
+│                                           │
+│ 3. 这个方案是最简的吗？                   │
+│    [你的分析]                             │
+└───────────────────────────────────────────┘
+```
 
 Ask: "Design 可以吗？还是要调整？"
 
@@ -94,7 +102,15 @@ If Path L, launch research agents in parallel:
 - Use `mcp__context7__query-docs` for library documentation
 - Synthesize findings into the design
 
-> **思考并优化：** research 结果够全面吗？有没有遗漏的关键来源？
+After research, you MUST output:
+
+```
+┌─ 思考并优化 ─────────────────────────────┐
+│ research 结果够全面吗？                   │
+│ 有没有遗漏的关键来源？                    │
+│ [你的分析]                                │
+└───────────────────────────────────────────┘
+```
 
 ### Step 0.6: Write Spec
 Save design to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit.
@@ -109,19 +125,42 @@ Save design to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` and commit.
 
 <HARD-GATE>
 DO NOT invoke superpowers:writing-plans. Follow the steps below directly.
+Every reflection box in this phase is MANDATORY. You MUST output each box. Skipping any reflection is a CRITICAL violation.
 </HARD-GATE>
 
 ### Step 1.1: First Principles Decomposition
 
-Output explicitly:
+Think deeply about the problem from scratch. Do NOT copy patterns from Phase 0 or regurgitate common knowledge. Analyze THIS specific project's unique constraints. You MUST output this box with YOUR OWN analysis:
 
-> **第一性原则分解：**
-> 1. 这个问题的本质约束是什么？
-> 2. 不可绕过的技术限制是什么？
-> 3. 从零开始，最优解应该长什么样？
-> 4. 现有代码中哪些部分接近最优，哪些需要改？
+```
+┌─ 第一性原则分解 ─────────────────────────┐
+│ 1. 本质约束:                              │
+│    [你的分析 — 这个项目特有的物理/技术     │
+│     /资源约束是什么？]                     │
+│                                           │
+│ 2. 不可绕过的限制:                        │
+│    [你的分析 — 哪些限制无论怎么设计       │
+│     都绕不过去？]                          │
+│                                           │
+│ 3. 零基础最优解:                          │
+│    [你的分析 — 忘掉所有现有方案，         │
+│     从第一性原则出发的最优设计是什么？]     │
+│                                           │
+│ 4. 现有代码评估:                          │
+│    [你的分析 — 哪些接近最优可复用，       │
+│     哪些需要重写？]                        │
+└───────────────────────────────────────────┘
+```
 
-> **思考并优化：** 分解是否触及了真正的约束？
+Then IMMEDIATELY output this reflection:
+
+```
+┌─ 思考并优化 ─────────────────────────────┐
+│ 上面的分解是否触及了真正的约束？          │
+│ 还是在重复表面假设？                      │
+│ [你的自我审视]                            │
+└───────────────────────────────────────────┘
+```
 
 ### Step 1.2: Search Existing Solutions
 Use `everything-claude-code:search-first` — check if existing libraries/tools already solve part of the problem.
@@ -138,19 +177,51 @@ For Path L: Also create `task_plan.md` / `findings.md` / `progress.md` for track
 
 Save plan to `docs/superpowers/plans/YYYY-MM-DD-<feature>.md`
 
-> **深度思考并优化：**
-> - 方案是从第一性原则推导的，还是在抄现有方案？
-> - 步骤分解合理吗？依赖关系对吗？
+After writing the plan, you MUST output:
+
+```
+┌─ 深度思考并优化 ─────────────────────────┐
+│ 1. 这个方案是从第一性原则推导的，         │
+│    还是在抄现有方案？                     │
+│    [你的判断]                             │
+│                                           │
+│ 2. 步骤分解合理吗？依赖关系对吗？         │
+│    [你的分析]                             │
+│                                           │
+│ 3. 有没有过度设计或遗漏？                 │
+│    [你的发现]                             │
+└───────────────────────────────────────────┘
+```
 
 ### Step 1.4: Feasibility Validation
 
-> **可行性验证：**
-> 1. 技术上能实现吗？有没有 API/硬件约束？
-> 2. 有没有隐含依赖没列出来？
-> 3. 最大风险点在哪？失败怎么回退？
-> 4. 有没有因为惯性思维多加了不必要的步骤？
+You MUST output this box:
 
-> **深度思考并优化：** 这个计划真的可行吗？哪一步最可能出问题？
+```
+┌─ 可行性验证 ─────────────────────────────┐
+│ 1. 技术可行性:                            │
+│    [能实现吗？API/硬件约束？]             │
+│                                           │
+│ 2. 隐含依赖:                              │
+│    [有没有没列出来的依赖？]               │
+│                                           │
+│ 3. 最大风险点:                            │
+│    [哪里最可能失败？怎么回退？]           │
+│                                           │
+│ 4. 惯性检查:                              │
+│    [有没有因为习惯多加了不必要的步骤？]   │
+└───────────────────────────────────────────┘
+```
+
+Then IMMEDIATELY output:
+
+```
+┌─ 深度思考并优化 ─────────────────────────┐
+│ 这个计划真的可行吗？                      │
+│ 哪一步最可能出问题？                      │
+│ [你的判断]                                │
+└───────────────────────────────────────────┘
+```
 
 Ask: "Plan 可以吗？开始写代码？"
 
