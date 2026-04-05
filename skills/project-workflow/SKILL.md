@@ -160,34 +160,69 @@ Ask: "Plan 可以吗？开始写代码？"
 
 ## Phase 2: BUILD
 
-### For each task in the plan (or directly for Path S):
+<HARD-GATE>
+For EVERY task (not just scaffold), you MUST follow the 5-step cycle below IN ORDER. You MUST output the reflection checkpoint box after each task. Skipping TDD or skipping reflections is a CRITICAL violation. No exceptions.
+</HARD-GATE>
 
-**Step 2.1: TDD — Write tests first**
+### The BUILD Cycle (repeat for each task):
 
-> **思考并优化：** 测试覆盖够吗？边界情况考虑了吗？
+**Step 2.1: Write tests FIRST (TDD)**
+- Write a failing test that defines the expected behavior
+- Run the test to confirm it FAILS
+- If the task is pure scaffold (no logic), write a smoke test instead (e.g., "module imports without error", "config file is valid")
 
-**Step 2.2: Implement → make tests pass**
-[Ruff hook auto-formats on save — automatic]
+**Step 2.2: Implement — make the test pass**
+- Write MINIMAL code to pass the test
+- Run the test to confirm it PASSES
 
-> **思考并优化：** 有更简洁的写法吗？
+**Step 2.3: Reflect and optimize**
 
-**Step 2.3: Review**
-Dispatch `everything-claude-code:python-review` agent
+You MUST output this box after implementation:
 
-> **思考并优化：** review 发现的问题都修了吗？
+```
+┌─ 思考并优化 ─────────────────────────────┐
+│ 测试: [覆盖够吗？边界情况？]              │
+│ 实现: [有更简洁的写法吗？]                │
+│ 质量: [命名清晰吗？职责单一吗？]          │
+└───────────────────────────────────────────┘
+```
 
-**Step 2.4: Security (if triage marked security-required)**
-Dispatch `everything-claude-code:security-review` agent
+If any answer reveals an issue → fix it NOW before proceeding.
 
-> **思考并优化：** 安全问题有没有漏掉的？
+**Step 2.4: Review**
+- Dispatch code review agent (python-review / typescript-reviewer depending on language)
+- If security-required: also dispatch security-review agent
+- Fix all issues found before proceeding
 
-**Step 2.5: Test gate**
-Run: `python -m pytest tests/ -q`
-PASS → mark task done, update progress.md
-FAIL → fix and re-run
+**Step 2.5: Test gate + checkpoint**
+
+Run full test suite. Then output this checkpoint:
+
+```
+╔══ Task Checkpoint ═══════════════════════╗
+║ Task:    [task name]                      ║
+║ Tests:   [X passed / Y total]             ║
+║ Status:  [PASS / FAIL]                    ║
+╚══════════════════════════════════════════╝
+```
+
+PASS → proceed to next task
+FAIL → fix and re-run until PASS
+
+### For tasks with deep implications (architecture, data model, core systems):
+
+After the checkpoint, ALSO output:
+
+```
+┌─ 深度思考并优化 ─────────────────────────┐
+│ 这个实现会限制后续扩展吗？                │
+│ 有没有做了不该做的假设？                  │
+│ 如果要改，现在改成本最低                  │
+└───────────────────────────────────────────┘
+```
 
 ### Parallel execution (Path L only):
-If plan has independent tasks, dispatch parallel worktree agents via `Agent` tool with `isolation: "worktree"`.
+If plan has independent tasks, dispatch parallel worktree agents via `Agent` tool with `isolation: "worktree"`. Each agent MUST follow the same 5-step cycle.
 
 ---
 
