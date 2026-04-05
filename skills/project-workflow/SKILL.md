@@ -41,6 +41,7 @@ These thoughts mean you are about to violate the workflow:
 | "Phase 0 questions are unnecessary, user was clear" | You think you understand. Ask anyway. Users omit constraints they assume you know. |
 | "Let me write code then add tests" | TDD means test FIRST. If you wrote code first, delete it. |
 | "progress.md update is busywork" | Your user needs to resume next session. Update it. |
+| "I'll ask all questions at once to save time" | One question per message. Wait for the answer. Batching loses nuance. |
 
 **ALL of these mean: STOP. You are rationalizing. Follow the workflow.**
 
@@ -103,7 +104,8 @@ DO NOT invoke `superpowers:brainstorming`. Follow the steps below directly.
 Read files, docs, commits. No long summary — absorb and move on.
 
 ### Step 0.2: Clarifying Questions
-One question at a time. Multiple choice preferred. 2-4 questions max.
+**Only one question per message.** If the topic needs more exploration, break it into multiple messages. Do NOT batch questions — ask one, wait for the answer, then ask the next.
+Multiple choice preferred. Total across the phase: 2-4 questions.
 If user says "继续": proceed with reasonable defaults (do NOT skip the phase).
 
 ### Step 0.3: Approaches
