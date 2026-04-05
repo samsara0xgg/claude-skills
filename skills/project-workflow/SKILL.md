@@ -11,6 +11,10 @@ You MUST complete each phase in order. You MUST output the TRIAGE assessment BEF
 </HARD-GATE>
 
 <HARD-GATE>
+REFLECTION QUALITY RULE: Every reflection box (深度思考并优化 / 思考并优化) is NOT a template to fill in mechanically. Before outputting each reflection box, you MUST pause and genuinely think: challenge your own assumptions, look for flaws in what you just produced, consider alternatives you dismissed too quickly. If your reflection just restates what you already said in different words, you are doing it wrong. A good reflection CHANGES something — it catches a mistake, surfaces a risk you missed, or identifies a simpler approach. If your reflection changes nothing, think harder.
+</HARD-GATE>
+
+<HARD-GATE>
 DO NOT invoke `superpowers:brainstorming` or `superpowers:writing-plans` as separate skills. They have their own competing workflows that will override this one. Instead, follow the inline instructions in each phase below. You ARE the workflow controller — never hand off control to another process-level skill.
 </HARD-GATE>
 
