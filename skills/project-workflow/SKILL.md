@@ -303,44 +303,104 @@ If plan has independent tasks, dispatch parallel worktree agents via `Agent` too
 
 ## Phase 3: VERIFY
 
+<HARD-GATE>
+Phase 3 is MANDATORY for Path M and L. You MUST NOT skip it. You MUST NOT claim "Layer X complete" or "done" without running Phase 3. Completing all BUILD tasks does NOT mean the work is done — VERIFY must happen.
+</HARD-GATE>
+
 Run in parallel:
-1. `python -m pytest tests/ -v` (full suite)
-2. Dispatch `superpowers:code-reviewer` agent — review against plan
+1. Full test suite (e.g., `npx vitest run` or `python -m pytest tests/ -v`)
+2. Dispatch code review agent (`superpowers:code-reviewer` or language-specific reviewer like `typescript-reviewer`) — review ALL code written in Phase 2 against the plan
 3. Dispatch `everything-claude-code:security-scan` agent (if security-required)
 
-> **思考并优化：** review 和 scan 发现的问题都修完了吗？
+After all results return, you MUST output:
 
-Then verify:
-- Run actual commands, show real output
-- NO claiming "done" without evidence
+```
+┌─ 思考并优化 ─────────────────────────────┐
+│ review 发现了什么问题？都修完了吗？       │
+│ [你的分析]                                │
+│                                           │
+│ 测试覆盖有盲区吗？                        │
+│ [你的分析]                                │
+└───────────────────────────────────────────┘
+```
 
-> **深度思考并优化：**
-> - 整体一致性如何？
-> - 有没有遗留问题？
-> - 改动的副作用想清楚了吗？
+Fix ALL issues found. Then run tests again to confirm. Then output:
+
+```
+┌─ 深度思考并优化 ─────────────────────────┐
+│ 整体一致性如何？模块间接口对得上吗？      │
+│ [你的分析]                                │
+│                                           │
+│ 有没有遗留问题或技术债？                  │
+│ [你的分析]                                │
+│                                           │
+│ 改动的副作用想清楚了吗？                  │
+│ [你的分析]                                │
+└───────────────────────────────────────────┘
+```
+
+Show actual command output as evidence. NO claiming "done" without proof.
+
+```
+╔══ VERIFY Checkpoint ════════════════════╗
+║ Tests:     [X passed / Y total]          ║
+║ Review:    [issues found / fixed]        ║
+║ Security:  [clean / N issues]            ║
+║ Status:    [VERIFIED / BLOCKED]          ║
+╚═════════════════════════════════════════╝
+```
 
 ---
 
 ## Phase 4: SHIP
 
-**1. Commit** (DO NOT auto-push)
+<HARD-GATE>
+Phase 4 is MANDATORY. You MUST update progress.md. For Path L you MUST run learn-eval reflection. Do NOT end the session without completing Phase 4.
+</HARD-GATE>
 
-> **思考并优化：** commit message 准确反映了改动吗？
+**Step 4.1: Commit** (DO NOT auto-push)
 
-**2. Update progress.md** to mark completion.
+```
+┌─ 思考并优化 ─────────────────────────────┐
+│ commit message 准确反映了改动吗？         │
+│ [你的判断]                                │
+└───────────────────────────────────────────┘
+```
 
-**3. Learn (Path L only)**
+**Step 4.2: Update progress.md**
+Mark completed tasks, update "Next" section. This is NOT optional.
 
-> **深度思考并优化：**
-> - 这次有什么可复用的模式？
-> - 长期影响？下次怎么更快？
+**Step 4.3: Learn (Path L only)**
+
+```
+┌─ 深度思考并优化 ─────────────────────────┐
+│ 这次有什么可复用的模式？                  │
+│ [你的发现]                                │
+│                                           │
+│ 哪里花的时间比预期多？为什么？            │
+│ [你的分析]                                │
+│                                           │
+│ 下次做类似项目，怎么更快？                │
+│ [你的建议]                                │
+└───────────────────────────────────────────┘
+```
 
 ---
 
+## BUILD Discipline Rules
+
+<HARD-GATE>
+TASK MERGING LIMIT: You may merge at most 2 closely-related tasks (e.g., BILD parser + ANIM parser). You MUST NOT merge 3+ tasks into one giant implementation. Each merged group MUST still have its own TDD cycle + reflection box + checkpoint. Merging 6 tasks (like L0-5 through L0-10) into one is a CRITICAL violation.
+</HARD-GATE>
+
+<HARD-GATE>
+CODE REVIEW REQUIREMENT: You MUST dispatch a code review agent at least once per Layer/Phase of BUILD. For TypeScript projects use `typescript-reviewer`, for Python use `python-reviewer`. Skipping code review for an entire Layer is a CRITICAL violation.
+</HARD-GATE>
+
 ## Always-On (all paths, all phases)
 
-- Ruff hook (PostToolUse auto-format) — automatic
-- python-review — any code change
+- Format hook (PostToolUse auto-format) — automatic
+- Language-appropriate review agent — any code change
 - verification-before-completion — any task completion
 - security-review — when security-required
 - docs / Context7 — when external library involved
@@ -348,9 +408,11 @@ Then verify:
 ## Phase Transition Rules
 
 ```
-TRIAGE ──→ Path S? ──→ Phase 2 (BUILD) directly
+TRIAGE ──→ Path S? ──→ Phase 2 (BUILD) → Phase 3 (VERIFY) → Phase 4 (SHIP)
            Path M? ──→ Phase 0 → Phase 1 → Phase 2 → Phase 3 → Phase 4
            Path L? ──→ Phase 0 (with research) → Phase 1 → Phase 2 → Phase 3 → Phase 4
 ```
 
-Each phase MUST complete and get user approval (where indicated) before the next phase starts. Never skip ahead. Never lose control to another skill's workflow.
+<HARD-GATE>
+PHASE COMPLETION: Each phase MUST complete before the next starts. Phase 3 (VERIFY) and Phase 4 (SHIP) are NOT optional — even if all tests pass in BUILD, you still run VERIFY and SHIP. The session MUST NOT end mid-workflow without at least reaching Phase 4 or explicitly telling the user "Phase 3/4 still pending, run /project-workflow continue next session."
+</HARD-GATE>
